@@ -23,9 +23,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ wishlists, onAddClick, onS
       {/* Header Summary */}
       <div className="mb-10 text-center space-y-2">
         <h1 className="text-3xl md:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-500">
-          DreamSaver
+          ODARCH SAVER
         </h1>
-        <p className="text-slate-500">Wujudkan semua keinginanmu, satu per satu.</p>
+        <p className="text-slate-500">Wujudkan semua keinginan, satu per satu.</p>
       </div>
 
       {/* Stats Card */}
