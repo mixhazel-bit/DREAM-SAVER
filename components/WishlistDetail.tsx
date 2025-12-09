@@ -9,7 +9,7 @@ interface WishlistDetailProps {
   onBack: () => void;
   onAddSavings: () => void;
   onWithdraw: () => void;
-  onDelete: (id: string) => void;
+  onDelete: (id: string, title: string) => void;
 }
 
 export const WishlistDetail: React.FC<WishlistDetailProps> = ({ wishlist, onBack, onAddSavings, onWithdraw, onDelete }) => {
@@ -68,9 +68,7 @@ export const WishlistDetail: React.FC<WishlistDetailProps> = ({ wishlist, onBack
   };
 
   const handleDelete = () => {
-    if (confirm('Apakah kamu yakin ingin menghapus wishlist ini?')) {
-      onDelete(wishlist.id);
-    }
+    onDelete(wishlist.id, wishlist.title);
   };
 
   return (

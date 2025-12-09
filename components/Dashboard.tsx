@@ -1,14 +1,15 @@
 import React from 'react';
-import { Plus, Wallet, Calendar, CheckCircle2 } from 'lucide-react';
+import { Plus, Wallet, Calendar, CheckCircle2, Trash2 } from 'lucide-react';
 import { Wishlist } from '../types';
 
 interface DashboardProps {
   wishlists: Wishlist[];
   onAddClick: () => void;
   onSelectWishlist: (id: string) => void;
+  onDelete: (id: string, title: string) => void;
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ wishlists, onAddClick, onSelectWishlist }) => {
+export const Dashboard: React.FC<DashboardProps> = ({ wishlists, onAddClick, onSelectWishlist, onDelete }) => {
   const totalSaved = wishlists.reduce((sum, item) => sum + item.savedAmount, 0);
   const totalGoals = wishlists.reduce((sum, item) => sum + item.targetAmount, 0);
   const progress = totalGoals > 0 ? (totalSaved / totalGoals) * 100 : 0;
@@ -84,6 +85,18 @@ export const Dashboard: React.FC<DashboardProps> = ({ wishlists, onAddClick, onS
               onClick={() => onSelectWishlist(item.id)}
               className="group relative aspect-square rounded-3xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 bg-white"
             >
+              {/* Delete Button - Hidden by default, shown on hover */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(item.id, item.title);
+                }}
+                className="absolute top-3 left-3 z-30 p-2 rounded-full bg-black/20 backdrop-blur-md text-white/80 hover:bg-rose-500 hover:text-white transition-all duration-300 opacity-0 group-hover:opacity-100 transform scale-90 group-hover:scale-100"
+                title="Hapus Tabungan"
+              >
+                <Trash2 size={16} />
+              </button>
+
               {/* Image Background */}
               {item.image ? (
                 <img 

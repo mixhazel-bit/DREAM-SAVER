@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Upload, Calendar, Target, Type, DollarSign, ZoomIn, Move, ArrowDown, ArrowUp } from 'lucide-react';
+import { X, Upload, Calendar, Target, Type, DollarSign, ZoomIn, Move, ArrowDown, ArrowUp, AlertTriangle } from 'lucide-react';
 import { Wishlist } from '../types';
 
 interface AddWishlistModalProps {
@@ -405,6 +405,56 @@ export const AddSavingsModal: React.FC<AddSavingsModalProps> = ({
             </button>
           </div>
         </form>
+      </div>
+    </div>
+  );
+};
+
+interface ConfirmationModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  title: string;
+  message: string;
+}
+
+export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ 
+  isOpen, 
+  onClose, 
+  onConfirm, 
+  title, 
+  message 
+}) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden animate-fade-in p-6">
+        <div className="flex flex-col items-center text-center space-y-4">
+          <div className="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center text-rose-500">
+            <AlertTriangle size={32} />
+          </div>
+          
+          <div>
+            <h2 className="text-xl font-bold text-slate-800">{title}</h2>
+            <p className="text-slate-500 mt-2 text-sm leading-relaxed">{message}</p>
+          </div>
+
+          <div className="flex gap-3 w-full mt-2">
+            <button
+              onClick={onClose}
+              className="flex-1 px-4 py-3 bg-slate-100 text-slate-600 font-semibold rounded-xl hover:bg-slate-200 transition-colors"
+            >
+              Batal
+            </button>
+            <button
+              onClick={onConfirm}
+              className="flex-1 px-4 py-3 bg-rose-600 text-white font-semibold rounded-xl hover:bg-rose-700 shadow-lg shadow-rose-200 transition-colors"
+            >
+              Ya, Hapus
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

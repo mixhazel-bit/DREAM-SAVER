@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Wishlist, Transaction } from './types';
 import { Dashboard } from './components/Dashboard';
 import { WishlistDetail } from './components/WishlistDetail';
-import { AddWishlistModal, AddSavingsModal } from './components/Modals';
+import { AddWishlistModal, AddSavingsModal, ConfirmationModal } from './components/Modals';
 
 const STORAGE_KEY = 'dreamsaver_data_v1';
 
@@ -14,6 +14,11 @@ const App: React.FC = () => {
   const [isAddWishlistOpen, setIsAddWishlistOpen] = useState(false);
   const [isAddSavingsOpen, setIsAddSavingsOpen] = useState(false);
   const [savingsMode, setSavingsMode] = useState<'save' | 'withdraw'>('save');
+  
+  // Delete Confirmation State
+  const [deleteConfirmation, setDeleteConfirmation] = useState<{isOpen: boolean, id: string | null, title: string}>({
+    isOpen: false, id: null, title: ''
+  });
 
   // Load from local storage on mount
   useEffect(() => {
@@ -43,9 +48,19 @@ const App: React.FC = () => {
     setWishlists(prev => [item, ...prev]);
   };
 
-  const handleDeleteWishlist = (id: string) => {
-    setWishlists(prev => prev.filter(w => w.id !== id));
-    setActiveWishlistId(null);
+  const openDeleteConfirmation = (id: string, title: string) => {
+    setDeleteConfirmation({ isOpen: true, id, title });
+  };
+
+  const confirmDelete = () => {
+    if (deleteConfirmation.id) {
+      setWishlists(prev => prev.filter(w => w.id !== deleteConfirmation.id));
+      // If we are deleting the active item, close it
+      if (activeWishlistId === deleteConfirmation.id) {
+        setActiveWishlistId(null);
+      }
+      setDeleteConfirmation({ isOpen: false, id: null, title: '' });
+    }
   };
 
   const handleAddSavings = (amount: number, note: string) => {
@@ -90,13 +105,14 @@ const App: React.FC = () => {
             setSavingsMode('withdraw');
             setIsAddSavingsOpen(true);
           }}
-          onDelete={handleDeleteWishlist}
+          onDelete={openDeleteConfirmation}
         />
       ) : (
         <Dashboard 
           wishlists={wishlists} 
           onAddClick={() => setIsAddWishlistOpen(true)}
           onSelectWishlist={setActiveWishlistId}
+          onDelete={openDeleteConfirmation}
         />
       )}
 
@@ -117,6 +133,14 @@ const App: React.FC = () => {
           currentSaved={activeWishlist.savedAmount}
         />
       )}
+
+      <ConfirmationModal
+        isOpen={deleteConfirmation.isOpen}
+        onClose={() => setDeleteConfirmation({ ...deleteConfirmation, isOpen: false })}
+        onConfirm={confirmDelete}
+        title="Hapus Tabungan?"
+        message={`Apakah kamu yakin ingin menghapus "${deleteConfirmation.title}"? Data yang dihapus tidak dapat dikembalikan.`}
+      />
     </div>
   );
 };
